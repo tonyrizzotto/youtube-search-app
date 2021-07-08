@@ -3,13 +3,18 @@ import React from 'react';
 class SearchBar extends React.Component {
   state = { term: '' };
 
+  // Allows a controlled input
   onInputChange = (event) => {
     this.setState({ term: event.target.value });
   };
 
+  // What do do when the form is submitted
   onFormSubmit = (event) => {
     // prevent the default action on submit
     event.preventDefault();
+
+    //TODO: callback from parent component
+    this.props.onTermSubmit(this.state.term);
   };
 
   render() {
