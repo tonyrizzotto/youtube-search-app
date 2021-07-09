@@ -8,6 +8,10 @@ class App extends React.Component {
   //initialize empty state on an array for videos
   state = { videos: [], selectedVideo: null };
   //call back to the Search Bar
+
+  componentDidMount() {
+    this.onTermSubmit('minnie mouse');
+  }
   onTermSubmit = async (term) => {
     const response = await youtube.get('/search', {
       params: {
@@ -15,7 +19,11 @@ class App extends React.Component {
       },
     });
 
-    this.setState({ videos: response.data.items });
+    this.setState({
+      videos: response.data.items,
+      // takes the first video on search and uses it as a default video
+      selectedVideo: response.data.items[0],
+    });
   };
 
   // create a callback function that runs when a video is selected
@@ -28,11 +36,19 @@ class App extends React.Component {
     return (
       <div className="ui container">
         <SearchBar onTermSubmit={this.onTermSubmit} />
-        <VideoDetail video={this.state.selectedVideo} />
-        <VideoList
-          onVideoSelect={this.onVideoSelect}
-          videos={this.state.videos}
-        />
+        <div className="ui grid">
+          <div className="ui row">
+            <div className="eleven wide column">
+              <VideoDetail video={this.state.selectedVideo} />
+            </div>
+            <div className="five wide column">
+              <VideoList
+                onVideoSelect={this.onVideoSelect}
+                videos={this.state.videos}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
